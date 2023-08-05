@@ -34,7 +34,7 @@ class Post extends Equatable {
       'title': title,
       'body': body,
       'userId': userId,
-      'id': id,
+      // 'id': id,
     };
   }
 
