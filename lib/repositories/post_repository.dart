@@ -89,4 +89,19 @@ class PostRepository {
       );
     }
   }
+
+  Future<bool> detletePost(int id) async {
+    try {
+      final response =
+          await _dio.delete('https://jsonplaceholder.typicode.com/posts/$id');
+
+      return response.statusCode == 200;
+    } on DioException catch (error) {
+      print('Dio Error ${error.message}');
+      throw Failure(
+        statusCode: error.response?.statusCode,
+        statusMessage: error.message,
+      );
+    }
+  }
 }

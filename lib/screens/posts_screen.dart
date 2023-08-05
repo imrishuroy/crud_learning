@@ -5,8 +5,21 @@ import 'package:crud_learning/screens/post_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PostsScreen extends StatelessWidget {
+class PostsScreen extends StatefulWidget {
   const PostsScreen({super.key});
+
+  @override
+  State<PostsScreen> createState() => _PostsScreenState();
+}
+
+class _PostsScreenState extends State<PostsScreen> {
+  final _postBloc = PostBloc();
+
+  @override
+  void initState() {
+    _postBloc.add(PostLoaded());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +39,7 @@ class PostsScreen extends StatelessWidget {
         ],
       ),
       body: BlocBuilder<PostBloc, PostState>(
-        bloc: PostBloc()..add(PostLoaded()),
+        bloc: _postBloc,
         builder: (context, state) {
           if (state.postStatus == PostStatus.success) {
             final posts = state.posts;
@@ -43,37 +56,47 @@ class PostsScreen extends StatelessWidget {
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         final post = posts[index];
-                        return GestureDetector(
-                          onTap: () {
+                        return Dismissible(
+                          key: Key(posts[index].toString()),
+                          direction: DismissDirection.endToStart,
+                          background: Container(color: Colors.red.shade700),
+                          onDismissed: (direction) {
                             if (post?.id != null) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => PostDetailsScreen(
-                                    postId: post!.id!,
-                                  ),
-                                ),
-                              );
+                              _postBloc.add(PostDeleted(id: post!.id!));
                             }
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                            ),
-                            child: ListTile(
-                              title: Text(post?.title ?? 'N/A'),
-                              //  subtitle: Text(post?.body ?? 'N/A'),
-                              leading: CircleAvatar(
-                                child: Text('${post?.id}'),
-                              ),
-                              trailing: IconButton(
-                                icon: const Icon(
-                                  Icons.edit,
-                                  size: 20.0,
-                                ),
-                                onPressed: () => Navigator.of(context).push(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (post?.id != null) {
+                                Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) => EditPostScreen(
-                                      post: post,
+                                    builder: (_) => PostDetailsScreen(
+                                      postId: post!.id!,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                              ),
+                              child: ListTile(
+                                title: Text(post?.title ?? 'N/A'),
+                                //  subtitle: Text(post?.body ?? 'N/A'),
+                                leading: CircleAvatar(
+                                  child: Text('${post?.id}'),
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    size: 20.0,
+                                  ),
+                                  onPressed: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => EditPostScreen(
+                                        post: post,
+                                      ),
                                     ),
                                   ),
                                 ),
