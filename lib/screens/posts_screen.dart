@@ -1,4 +1,5 @@
 import 'package:crud_learning/blocs/bloc/post_bloc.dart';
+import 'package:crud_learning/screens/post_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,15 +27,28 @@ class PostsScreen extends StatelessWidget {
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         final post = posts[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                          ),
-                          child: ListTile(
-                            title: Text(post?.title ?? 'N/A'),
-                            subtitle: Text(post?.body ?? 'N/A'),
-                            leading: CircleAvatar(
-                              child: Text('${post?.id}'),
+                        return GestureDetector(
+                          onTap: () {
+                            if (post?.id != null) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => PostDetailsScreen(
+                                    postId: post!.id!,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8.0,
+                            ),
+                            child: ListTile(
+                              title: Text(post?.title ?? 'N/A'),
+                              //  subtitle: Text(post?.body ?? 'N/A'),
+                              leading: CircleAvatar(
+                                child: Text('${post?.id}'),
+                              ),
                             ),
                           ),
                         );
