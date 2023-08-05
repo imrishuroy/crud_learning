@@ -47,4 +47,46 @@ class PostRepository {
       );
     }
   }
+
+  Future<bool> createPost({
+    required Post post,
+  }) async {
+    try {
+      final response = await _dio.post(
+        'https://jsonplaceholder.typicode.com/posts',
+        data: post.toMap(),
+      );
+
+      print('create post response $response');
+
+      return response.statusCode == 201;
+    } on DioException catch (error) {
+      print('Dio Error ${error.message}');
+      throw Failure(
+        statusCode: error.response?.statusCode,
+        statusMessage: error.message,
+      );
+    }
+  }
+
+  Future<bool> editPost({
+    required Post post,
+  }) async {
+    try {
+      final response = await _dio.put(
+        'https://jsonplaceholder.typicode.com/posts/${post.id}',
+        data: post.toMap()..addAll({'id': post.id}),
+      );
+
+      print('create post response $response');
+
+      return response.statusCode == 200;
+    } on DioException catch (error) {
+      print('Dio Error ${error.message}');
+      throw Failure(
+        statusCode: error.response?.statusCode,
+        statusMessage: error.message,
+      );
+    }
+  }
 }

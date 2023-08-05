@@ -17,3 +17,21 @@ class PostFetchedById extends PostEvent {
   @override
   List<Object> get props => [postId];
 }
+
+class PostCreated extends PostEvent {
+  final Post post;
+
+  const PostCreated({required this.post});
+
+  @override
+  List<Object> get props => [post];
+}
+
+class PostEdited extends PostEvent {
+  final Post post;
+
+  const PostEdited({required this.post});
+
+  @override
+  List<Object> get props => [post];
+}
