@@ -8,14 +8,15 @@ part 'post_event.dart';
 part 'post_state.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
+  final PostRepository _postRepository = PostRepository();
+
   PostBloc() : super(PostState.inital()) {
     on<PostLoaded>(
       (event, emit) async {
         try {
           emit(state.copyWith(postStatus: PostStatus.loading));
-          final postRepository = PostRepository();
 
-          final posts = await postRepository.getPosts();
+          final posts = await _postRepository.getPosts();
           emit(
             state.copyWith(
               posts: posts,
@@ -30,6 +31,18 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             ),
           );
         }
+      },
+    );
+    on<PostFetchedById>(
+      (event, emit) async {
+        emit(state.copyWith(postStatus: PostStatus.loading));
+        final post = await _postRepository.getPostById(event.postId);
+        emit(
+          state.copyWith(
+            post: post,
+            postStatus: PostStatus.success,
+          ),
+        );
       },
     );
   }
