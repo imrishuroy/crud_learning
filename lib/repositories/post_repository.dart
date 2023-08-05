@@ -68,4 +68,25 @@ class PostRepository {
       );
     }
   }
+
+  Future<bool> editPost({
+    required Post post,
+  }) async {
+    try {
+      final response = await _dio.put(
+        'https://jsonplaceholder.typicode.com/posts/${post.id}',
+        data: post.toMap()..addAll({'id': post.id}),
+      );
+
+      print('create post response $response');
+
+      return response.statusCode == 200;
+    } on DioException catch (error) {
+      print('Dio Error ${error.message}');
+      throw Failure(
+        statusCode: error.response?.statusCode,
+        statusMessage: error.message,
+      );
+    }
+  }
 }

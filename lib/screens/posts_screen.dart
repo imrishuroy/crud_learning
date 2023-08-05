@@ -1,5 +1,6 @@
 import 'package:crud_learning/blocs/bloc/post_bloc.dart';
 import 'package:crud_learning/screens/create_post_screen.dart';
+import 'package:crud_learning/screens/edit_post_screen.dart';
 import 'package:crud_learning/screens/post_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,6 +64,19 @@ class PostsScreen extends StatelessWidget {
                               //  subtitle: Text(post?.body ?? 'N/A'),
                               leading: CircleAvatar(
                                 child: Text('${post?.id}'),
+                              ),
+                              trailing: IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  size: 20.0,
+                                ),
+                                onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => EditPostScreen(
+                                      post: post,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
