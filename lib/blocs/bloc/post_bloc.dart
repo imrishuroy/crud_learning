@@ -67,5 +67,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         );
       },
     );
+    on<PostDeleted>(
+      (event, emit) async {
+        emit(state.copyWith(postStatus: PostStatus.loading));
+        final result = await _postRepository.detletePost(event.id);
+        emit(
+          state.copyWith(
+            postStatus: result ? PostStatus.success : PostStatus.failure,
+            posts: List.from(state.posts)
+              ..removeWhere((post) => post?.id == event.id),
+          ),
+        );
+        //add(PostLoaded());
+      },
+    );
   }
 }

@@ -35,3 +35,11 @@ class PostEdited extends PostEvent {
   @override
   List<Object> get props => [post];
 }
+
+class PostDeleted extends PostEvent {
+  final int id;
+  const PostDeleted({required this.id});
+
+  @override
+  List<Object> get props => [id];
+}
